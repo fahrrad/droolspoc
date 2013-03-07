@@ -2,19 +2,45 @@ package com.gb.cropdesign.droolspoc;
 
 public class PcrResult {
 
+	/**
+	 * the plant this pcr was executed on
+	 */
 	private Plant plant;
 
+	/**
+	 * the target to test against.
+	 */
 	private PcrTarget pcrTarget;
 
-	private boolean testGenePresent;
+	/**
+	 * Was the target found during the Pcr test? If this is null, the test
+	 * failed.
+	 */
+	private Boolean testGenePresent;
 
+	/**
+	 * When the copy number was determined, it is filled in here. Null means the
+	 * copy number was not determined. The copy number is used to calculate the zygocity.
+	 */
+	private Integer copyNr;
+	
+	/**
+	 * should the results of this test be included in the calculation? 
+	 */
+	private boolean used;
+
+	// constructors
+	
 	public PcrResult(Plant plant, PcrTarget pcrTarget, boolean isTestGenePresent) {
-
 		super();
 		this.plant = plant;
 		this.pcrTarget = pcrTarget;
 		this.testGenePresent = isTestGenePresent;
+		this.copyNr = null;
+		used = true;
 	}
+	
+	// Getters and setters
 
 	public Plant getPlant() {
 		return plant;
@@ -36,8 +62,24 @@ public class PcrResult {
 		return testGenePresent;
 	}
 
-	public void setTestGenePresent(boolean isTestGenePresent) {
+	public void setTestGenePresent(Boolean isTestGenePresent) {
 		this.testGenePresent = isTestGenePresent;
+	}
+	
+	public Integer getCopyNr() {
+		return copyNr;
+	}
+
+	public void setCopyNr(Integer copyNr) {
+		this.copyNr = copyNr;
+	}
+
+	public boolean isUsed() {
+		return used;
+	}
+
+	public void setUsed(boolean used) {
+		this.used = used;
 	}
 
 }

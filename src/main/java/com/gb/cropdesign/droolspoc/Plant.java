@@ -23,15 +23,21 @@ public class Plant {
 	private Zygocity zygocity;
 
 	/**
-	 * The RPD number for this plant. 
+	 * The RPD number for this plant.	 
 	 */
 	private String rpd;
 
 	public Plant(String name, String rpd) {
 		super();
+		
 		this.name = name;
 		this.rpd = rpd;
 		this.conform = false;
+		this.zygocity = Zygocity.UNDETERMINED;
+		
+		// To be on the safe side
+		this.transgene = true;
+		
 	}
 
 	public String getName() {

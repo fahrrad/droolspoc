@@ -12,7 +12,12 @@ public enum Zygocity {
 	 * A diploid organism is heterozygous at a gene locus when its cells contain
 	 * two different alleles of a gene. [wikipedia]
 	 */
-	HETEROZYGOUS("heterozygous");
+	HETEROZYGOUS("heterozygous"),
+	
+	/**
+	 * When not detected, or when unsure, the zygocity is undertermined
+	 */
+	UNDETERMINED("undertermined");
 
 	private final String name;
 

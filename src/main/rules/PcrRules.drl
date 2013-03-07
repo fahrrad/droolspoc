@@ -9,10 +9,11 @@ package com.gb.cropdesign.droolspoc;
 rule "Conform"
 when
 	$p : Plant(rpd == "RPD51" )
-	$term : PcrResult( testGenePresent == true
+	// Todo allow for nulls in testGene
+	$term : PcrResult( testGenePresent ==  true
 					, pcrTarget == PcrTarget.TERM
 					, plant==$p )
-	$prom: PcrResult( testGenePresent == true
+	$prom: PcrResult( testGenePresent ==  true
 					, pcrTarget == PcrTarget.PROM
 					, plant==$p )
 	$tzein : PcrResult( testGenePresent == true
