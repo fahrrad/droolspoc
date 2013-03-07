@@ -22,7 +22,7 @@ public class PcrResult {
 	 * When the copy number was determined, it is filled in here. Null means the
 	 * copy number was not determined. The copy number is used to calculate the zygocity.
 	 */
-	private Integer copyNr;
+	private Float copyNr;
 	
 	/**
 	 * should the results of this test be included in the calculation? 
@@ -66,11 +66,11 @@ public class PcrResult {
 		this.testGenePresent = isTestGenePresent;
 	}
 	
-	public Integer getCopyNr() {
+	public Float getCopyNr() {
 		return copyNr;
 	}
 
-	public void setCopyNr(Integer copyNr) {
+	public void setCopyNr(Float copyNr) {
 		this.copyNr = copyNr;
 	}
 

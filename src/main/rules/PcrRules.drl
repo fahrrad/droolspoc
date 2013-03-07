@@ -4,11 +4,20 @@ package com.gb.cropdesign.droolspoc;
 //list any import classes here.
 
 
-
 //declare any global variables here
-rule "Conform"
+
+
+
+rule "Plants are never conform, unless the results are explicitly written here"
+when 
+	$p : Plant(conform == null )
+then
+	modify( $p ) { setConform(false) };
+end
+ 
+rule "Conform for RPD 51, correct positive"
 when
-	$p : Plant(rpd == "RPD51" )
+	$p : Plant(rpd == "RPD51", conform==false)
 	// Todo allow for nulls in testGene
 	$term : PcrResult( testGenePresent ==  true
 					, pcrTarget == PcrTarget.TERM
@@ -21,6 +30,69 @@ when
 					, plant==$p)
 	
 then
-	$p.setConform(true);
+	modify ( $p ) { setConform( true )  } ;
 end
+
+
+rule "Conform for RPD 51, all negative"
+when
+	$p : Plant(rpd == "RPD51", conform==false)
+	// Todo allow for nulls in testGene
+	$term : PcrResult( testGenePresent ==  false
+					, pcrTarget == PcrTarget.TERM
+					, plant==$p )
+	$prom: PcrResult( testGenePresent ==  false
+					, pcrTarget == PcrTarget.PROM
+					, plant==$p )
+	$tzein : PcrResult( testGenePresent == false
+					, pcrTarget ==  PcrTarget.TZEIN
+					, plant==$p)
+then
+	modify ( $p ) { setConform(true) } ;
+end
+
+
+rule "Transgene when one of the tests is positive"
+when
+	$p : Plant( transgene == false)
+	$pcrr : PcrResult( testGenePresent == true, plant == $p)
+then 
+	modify ( $p ) { setTransgene(true) };
+end
+
+rule "Not Transgene when none of the tests is positive"
+when
+	$p : Plant( transgene == null || transgene == true  )
+	not PcrResult( testGenePresent == true, plant == $p)
+then 
+	modify ( $p ) { setTransgene(false) };
+end
+
+
+rule "Remove Pcr Results that should not be used"
+when 
+	$pcrr : PcrResult( used == false )
+then
+	retract( $pcrr );
+end
+
+
+rule "Copy Nr > 0 and < 1.3 => homozygous"
+when 
+	$p : Plant( zygocity == null )
+	$r : PcrResult(plant == $p
+					, copyNr > 0 && copyNr <= 1.3 )
+then
+	modify ( $p ) { setZygocity ( Zygocity.HOMOZYGOUS ) };
+end
+
+rule "Copy Nr > 1.3 and <= 2.5 => heterozygous"
+when 
+	$p : Plant( zygocity == null  )
+	$r : PcrResult(plant == $p
+					, copyNr > 1.3 && copyNr <= 2.5 )
+then
+	modify ( $p ) { setZygocity ( Zygocity.HETEROZYGOUS ) };
+end
+
 

@@ -8,14 +8,14 @@ public class Plant {
 	 * indicates whether this plant is conform to the rules defined per RPD this
 	 * will probably be defined by a combination of PCR results
 	 */
-	private boolean conform;
+	private Boolean conform;
 
 	/**
 	 * Does this plant contains any genes introduced during transformation? If
 	 * all the Pcr results are negative, the plant is null segregated, and
 	 * transgene will be null
 	 */
-	private boolean transgene;
+	private Boolean transgene;
 
 	/**
 	 * Zygocity is determined by the copy number of a Gene.
@@ -32,11 +32,10 @@ public class Plant {
 		
 		this.name = name;
 		this.rpd = rpd;
-		this.conform = false;
-		this.zygocity = Zygocity.UNDETERMINED;
 		
-		// To be on the safe side
-		this.transgene = true;
+		this.zygocity = null;
+		this.transgene = null;
+		this.conform = null;
 		
 	}
 
@@ -48,7 +47,7 @@ public class Plant {
 		this.name = name;
 	}
 
-	public boolean isConform() {
+	public Boolean getConform() {
 		return conform;
 	}
 
@@ -64,7 +63,7 @@ public class Plant {
 		this.rpd = rpd;
 	}
 
-	public boolean isTransgene() {
+	public Boolean getTransgene() {
 		return transgene;
 	}
 
