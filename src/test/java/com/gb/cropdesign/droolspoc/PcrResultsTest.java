@@ -1,18 +1,11 @@
 package com.gb.cropdesign.droolspoc;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.drools.KnowledgeBase;
-import org.drools.builder.KnowledgeBuilder;
-import org.drools.builder.KnowledgeBuilderFactory;
-import org.drools.builder.ResourceType;
-import org.drools.io.ResourceFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -21,48 +14,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@SuppressWarnings("restriction")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:/spring/rules-application-context.xml" })
 public class PcrResultsTest {
-
-	// private static KnowledgeBase kbase = KnowledgeBaseFactory
-	// .newKnowledgeBase();
-
+	
+	@SuppressWarnings("unused")
 	private static final Logger logger = LoggerFactory
 			.getLogger(PcrResultsTest.class);
-
-	// private static KnowledgeBuilder kbuilder = KnowledgeBuilderFactory
-	// .newKnowledgeBuilder();
-
+	
 	@Autowired
 	private KnowledgeBase kbase;
 
-	@Autowired
 	private StatefulKnowledgeSession ksession;
-
-	// @Before
-	// public void setupTestClass() {
-	// logger.info("<< SetupClass");
-	//
-	// kbuilder.add(ResourceFactory.newClassPathResource("PcrRules.drl"),
-	// ResourceType.DRL);
-	//
-	// if (kbuilder.hasErrors()) {
-	// System.err.println(kbuilder.getErrors().toString());
-	// }
-	//
-	// kbase.addKnowledgePackages(kbuilder.getKnowledgePackages());
-	// }
-
+	
 	@Before
-	public void setupTest() {
-		logger.info("<< setup");
-		// ksession = kbase.newStatefulKnowledgeSession();
+	public void setupSession(){
+		ksession = kbase.newStatefulKnowledgeSession();
 	}
 
 	@Test
 	public void testNonConformPlant() {
+		assertTrue(ksession.getObjects().isEmpty());
+		
 		Plant p1 = new Plant("e022.0221.00.1.5", "RPD51");
 
 		PcrResult r1 = new PcrResult(p1, PcrTarget.PROM, false);
@@ -81,6 +54,8 @@ public class PcrResultsTest {
 
 	@Test
 	public void testConformPlant() {
+		assertTrue(ksession.getObjects().isEmpty());
+
 		Plant p1 = new Plant("e022.0221.00.1.5", "RPD51");
 
 		PcrResult r1 = new PcrResult(p1, PcrTarget.PROM, true);
@@ -96,10 +71,9 @@ public class PcrResultsTest {
 
 		assertTrue(p1.isConform());
 	}
-
-//	@After
-//	public void disposeAfterTest() {
-//		ksession.dispose();
-//	}
-
+	
+	@After
+	public void destroySession(){
+		ksession.dispose();
+	}
 }
