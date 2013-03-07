@@ -1,0 +1,25 @@
+//created on: 5-mrt-2013
+package com.gb.cropdesign.droolspoc;
+
+//list any import classes here.
+
+
+
+//declare any global variables here
+rule "Conform"
+when
+	$p : Plant(rpd == "RPD51" )
+	$term : PcrResult( testGenePresent == true
+					, pcrTarget == PcrTarget.TERM
+					, plant==$p )
+	$prom: PcrResult( testGenePresent == true
+					, pcrTarget == PcrTarget.PROM
+					, plant==$p )
+	$tzein : PcrResult( testGenePresent == true
+					, pcrTarget ==  PcrTarget.TZEIN
+					, plant==$p)
+	
+then
+	$p.setConform(true);
+end
+
