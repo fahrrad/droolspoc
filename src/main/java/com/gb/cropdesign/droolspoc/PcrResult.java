@@ -9,6 +9,7 @@ public class PcrResult {
 	private boolean testGenePresent;
 
 	public PcrResult(Plant plant, PcrTarget pcrTarget, boolean isTestGenePresent) {
+
 		super();
 		this.plant = plant;
 		this.pcrTarget = pcrTarget;

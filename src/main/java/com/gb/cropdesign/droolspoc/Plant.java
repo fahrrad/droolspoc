@@ -13,6 +13,7 @@ public class Plant {
 		this.name = name;
 		this.rpd = rpd;
 		this.conform = false;
+
 	}
 
 	public String getName() {

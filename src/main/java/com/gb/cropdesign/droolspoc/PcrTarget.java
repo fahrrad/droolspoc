@@ -13,5 +13,4 @@ public enum PcrTarget {
 	public String getName() {
 		return name;
 	}
-
 }

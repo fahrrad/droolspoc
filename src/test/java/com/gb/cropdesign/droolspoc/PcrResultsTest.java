@@ -4,8 +4,15 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.drools.KnowledgeBase;
+import org.drools.builder.KnowledgeBuilder;
+import org.drools.builder.KnowledgeBuilderFactory;
+import org.drools.builder.ResourceType;
+import org.drools.io.ResourceFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -19,8 +26,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations = { "classpath:/spring/rules-application-context.xml" })
 public class PcrResultsTest {
 
+	// private static KnowledgeBase kbase = KnowledgeBaseFactory
+	// .newKnowledgeBase();
+
 	private static final Logger logger = LoggerFactory
 			.getLogger(PcrResultsTest.class);
+
+	// private static KnowledgeBuilder kbuilder = KnowledgeBuilderFactory
+	// .newKnowledgeBuilder();
 
 	@Autowired
 	private KnowledgeBase kbase;
@@ -28,9 +41,24 @@ public class PcrResultsTest {
 	@Autowired
 	private StatefulKnowledgeSession ksession;
 
+	// @Before
+	// public void setupTestClass() {
+	// logger.info("<< SetupClass");
+	//
+	// kbuilder.add(ResourceFactory.newClassPathResource("PcrRules.drl"),
+	// ResourceType.DRL);
+	//
+	// if (kbuilder.hasErrors()) {
+	// System.err.println(kbuilder.getErrors().toString());
+	// }
+	//
+	// kbase.addKnowledgePackages(kbuilder.getKnowledgePackages());
+	// }
+
 	@Before
 	public void setupTest() {
 		logger.info("<< setup");
+		// ksession = kbase.newStatefulKnowledgeSession();
 	}
 
 	@Test
@@ -68,5 +96,10 @@ public class PcrResultsTest {
 
 		assertTrue(p1.isConform());
 	}
+
+//	@After
+//	public void disposeAfterTest() {
+//		ksession.dispose();
+//	}
 
 }
