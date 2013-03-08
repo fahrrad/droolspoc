@@ -1,6 +1,8 @@
 package com.gb.cropdesign.droolspoc;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.drools.KnowledgeBase;
 import org.drools.runtime.StatefulKnowledgeSession;
@@ -105,8 +107,6 @@ public class PcrRulesTest {
 		logger.debug(">> testTransgene");
 
 		Plant p1 = new Plant("some transgene plant", "RPD49");
-		// default a plant is transgene
-		p1.setTransgene(false);
 
 		PcrResult r1 = new PcrResult(p1, PcrTarget.PROM, true);
 		ksession.insert(p1);
@@ -190,6 +190,41 @@ public class PcrRulesTest {
 		ksession.fireAllRules();
 		
 		assertEquals(Zygocity.HETEROZYGOUS, plant.getZygocity());
+		
+	}
+	
+	@Test
+	public void testPlantsToField(){
+		PlantsToField p2f = new PlantsToField("france");
+		
+		Plant plant1 = new Plant("some test plant1", "rpd324");
+		plant1.setTransgene(false);
+		plant1.setConform(true);
+		
+		Plant plant2 = new Plant("some test plant2", "rpd324");
+		plant2.setTransgene(false);
+		plant2.setConform(true);
+		
+		
+		Plant plant3 = new Plant("some test plant3", "rpd324");
+		plant3.setTransgene(true);
+		plant3.setConform(true);
+		
+		Plant plantWildRabbit = new Plant("Crazy mambo jambo", "rpd324");
+		plantWildRabbit.setConform(true);
+		
+		ksession.insert(p2f);
+		ksession.insert(plant1);
+		ksession.insert(plant2);
+		ksession.insert(plant3);
+		ksession.insert(plantWildRabbit);
+		
+		ksession.fireAllRules();
+		
+		assertEquals(3, p2f.getPlantList().size() );
+		assertTrue(p2f.getPlantList().contains(plant1));
+		assertTrue(p2f.getPlantList().contains(plant2));
+		assertTrue(p2f.getPlantList().contains(plantWildRabbit));
 		
 	}
 

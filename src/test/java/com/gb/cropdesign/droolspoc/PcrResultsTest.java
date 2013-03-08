@@ -17,25 +17,25 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:/spring/rules-application-context.xml" })
 public class PcrResultsTest {
-	
+
 	@SuppressWarnings("unused")
 	private static final Logger logger = LoggerFactory
 			.getLogger(PcrResultsTest.class);
-	
+
 	@Autowired
 	private KnowledgeBase kbase;
 
 	private StatefulKnowledgeSession ksession;
-	
+
 	@Before
-	public void setupSession(){
+	public void setupSession() {
 		ksession = kbase.newStatefulKnowledgeSession();
 	}
 
 	@Test
 	public void testNonConformPlant() {
 		assertTrue(ksession.getObjects().isEmpty());
-		
+
 		Plant p1 = new Plant("e022.0221.00.1.5", "RPD51");
 
 		PcrResult r1 = new PcrResult(p1, PcrTarget.PROM, false);
@@ -49,7 +49,7 @@ public class PcrResultsTest {
 
 		ksession.fireAllRules();
 
-		assertFalse(p1.isConform());
+		assertFalse(p1.getConform());
 	}
 
 	@Test
@@ -69,11 +69,11 @@ public class PcrResultsTest {
 
 		ksession.fireAllRules();
 
-		assertTrue(p1.isConform());
+		assertTrue(p1.getConform());
 	}
-	
+
 	@After
-	public void destroySession(){
+	public void destroySession() {
 		ksession.dispose();
 	}
 }

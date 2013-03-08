@@ -17,7 +17,7 @@ end
  
 rule "Conform for RPD 51, correct positive"
 when
-	$p : Plant(rpd == "RPD51", conform==false)
+	$p : Plant(rpd == "RPD51", conform==null)
 	// Todo allow for nulls in testGene
 	$term : PcrResult( testGenePresent ==  true
 					, pcrTarget == PcrTarget.TERM
@@ -36,7 +36,7 @@ end
 
 rule "Conform for RPD 51, all negative"
 when
-	$p : Plant(rpd == "RPD51", conform==false)
+	$p : Plant(rpd == "RPD51", conform==null)
 	// Todo allow for nulls in testGene
 	$term : PcrResult( testGenePresent ==  false
 					, pcrTarget == PcrTarget.TERM
@@ -54,7 +54,7 @@ end
 
 rule "Transgene when one of the tests is positive"
 when
-	$p : Plant( transgene == false)
+	$p : Plant( transgene == null)
 	$pcrr : PcrResult( testGenePresent == true, plant == $p)
 then 
 	modify ( $p ) { setTransgene(true) };
@@ -62,7 +62,7 @@ end
 
 rule "Not Transgene when none of the tests is positive"
 when
-	$p : Plant( transgene == null || transgene == true  )
+	$p : Plant( transgene == null )
 	not PcrResult( testGenePresent == true, plant == $p)
 then 
 	modify ( $p ) { setTransgene(false) };
@@ -76,6 +76,24 @@ then
 	retract( $pcrr );
 end
 
+/**
+rule "Can this plant be sent to the China filed?"
+when
+	$p: Plant( conform == true )
+	$p2f : PlantsToField( fieldName == "china" )
+then
+	modify ( $p2f ) { getPlantList().add($p) }
+end
+*/ 
+
+
+rule "Can this plant be sent to the france field?"
+when
+	$p: Plant( transgene == false, conform == true)
+	$p2f : PlantsToField( plantList not contains $p )
+then
+	modify ( $p2f ) { getPlantList().add($p) }
+end 
 
 rule "Copy Nr > 0 and < 1.3 => homozygous"
 when 
@@ -85,6 +103,7 @@ when
 then
 	modify ( $p ) { setZygocity ( Zygocity.HOMOZYGOUS ) };
 end
+
 
 rule "Copy Nr > 1.3 and <= 2.5 => heterozygous"
 when 
