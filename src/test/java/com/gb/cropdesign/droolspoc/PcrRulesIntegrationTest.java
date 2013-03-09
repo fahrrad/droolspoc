@@ -35,5 +35,4 @@ public class PcrRulesIntegrationTest {
 		
 		assertEquals(1975, plantsList.size());
 	}
-
 }

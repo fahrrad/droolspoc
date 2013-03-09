@@ -9,12 +9,12 @@ CREATE TABLE plant (id int primary key auto_increment
 );
 
 CREATE TABLE pcrresult (id int primary key auto_increment
-, plant_id int
+, plant_name varchar(255)
 , pcr_target varchar(63) 
 , is_test_gene_present bit
 , copy_nr float
 , is_used bit default 1
 
-,foreign key( plant_id ) references plant
+,foreign key( plant_name ) references plant ( name )
 );
 
