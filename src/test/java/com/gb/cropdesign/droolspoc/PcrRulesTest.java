@@ -1,8 +1,8 @@
 package com.gb.cropdesign.droolspoc;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+
+import javax.sql.DataSource;
 
 import org.drools.KnowledgeBase;
 import org.drools.runtime.StatefulKnowledgeSession;
@@ -22,6 +22,9 @@ public class PcrRulesTest {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(PcrRulesTest.class);
+	
+	@Autowired
+	DataSource db;
 
 	@Autowired
 	private KnowledgeBase kbase;
@@ -225,6 +228,12 @@ public class PcrRulesTest {
 		assertTrue(p2f.getPlantList().contains(plant1));
 		assertTrue(p2f.getPlantList().contains(plant2));
 		assertTrue(p2f.getPlantList().contains(plantWildRabbit));
+		
+	}
+	
+	@Test
+	public void testDataSource(){
+		assertNotNull(db);
 		
 	}
 
