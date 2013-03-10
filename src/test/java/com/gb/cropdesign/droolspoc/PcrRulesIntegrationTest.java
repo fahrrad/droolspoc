@@ -1,8 +1,10 @@
 package com.gb.cropdesign.droolspoc;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.List;
+
+import javax.sql.DataSource;
 
 import org.drools.KnowledgeBase;
 import org.drools.runtime.StatefulKnowledgeSession;
@@ -36,6 +38,9 @@ public class PcrRulesIntegrationTest {
 	@Autowired
 	StatefulKnowledgeSession ksession;
 	
+	@Autowired
+	DataSource datasource;
+	
 	private final Logger logger = LoggerFactory.getLogger(PcrRulesIntegrationTest.class);
 	
 	@Before
@@ -52,6 +57,27 @@ public class PcrRulesIntegrationTest {
 	}
 	
 	@Test
+	public void testAdding1PlantFromDb(){
+		Plant plant = plantService.getPlant("12OS0.001.593.905-003");
+		assertNotNull(plant);
+
+		List<PcrResult> pcrResults = pcrResultService.getPcrResultForPlantName("12OS0.001.593.905-003");
+		assertEquals(8, pcrResults.size());
+		
+		ksession.insert(plant);
+		for(Object fact: pcrResults){
+			ksession.insert(fact);
+		}
+		
+		ksession.fireAllRules();
+		
+		assertTrue(plant.getConform());
+		assertTrue(plant.getTransgene());
+		
+	}
+	
+	
+	@Test
 	public void testAddingPlantsToContext(){
 		List<Plant> plantsList = plantService.getAllPlants();
 		
@@ -65,7 +91,10 @@ public class PcrRulesIntegrationTest {
 		
 		ksession.fireAllRules();
 		
-		logger.debug("done!");
+		int indexOfConfromPlant = plantsList.indexOf(new Plant("12OS0.001.593.905-003", ""));
+		assertTrue(plantsList.get(indexOfConfromPlant).getConform());
+		assertTrue(plantsList.get(indexOfConfromPlant).getTransgene());
+		
 	}
 	
 	@Test 
@@ -79,6 +108,4 @@ public class PcrRulesIntegrationTest {
 	public void afterTest(){
 		ksession.dispose();
 	}
-	
-	
 }

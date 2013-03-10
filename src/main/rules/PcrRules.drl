@@ -6,7 +6,41 @@ package com.gb.cropdesign.droolspoc;
 
 //declare any global variables here
 
+rule "Conform for RPD 57, correct positive"
+when
+	$p : Plant(rpd == "rpd57", conform==null)
+	// Todo allow for nulls in testGene
+	$term : PcrResult( testGenePresent ==  true
+					, pcrTarget == PcrTarget.TERMINATOR
+					, plant==$p )
+	$prom: PcrResult( testGenePresent ==  true
+					, pcrTarget == PcrTarget.PROM_CDS___PRO0129_CDS4107
+					, plant==$p )
+	$tzein : PcrResult( testGenePresent == true
+					, pcrTarget ==  PcrTarget.PROM_CDS___PRO0170_CDS0045
+					, plant==$p)
+	
+then
+	modify ( $p ) { setConform( true )  } ;
+end
 
+rule "Conform for RPD 57, correct negative"
+when
+	$p : Plant(rpd == "rpd57", conform==null)
+	// Todo allow for nulls in testGene
+	$term : PcrResult( testGenePresent ==  false
+					, pcrTarget == PcrTarget.TERMINATOR
+					, plant==$p )
+	$prom: PcrResult( testGenePresent ==  false
+					, pcrTarget == PcrTarget.PROM_CDS___PRO0129_CDS4107
+					, plant==$p )
+	$tzein : PcrResult( testGenePresent == false
+					, pcrTarget ==  PcrTarget.PROM_CDS___PRO0170_CDS0045
+					, plant==$p)
+	
+then
+	modify ( $p ) { setConform( true )  } ;
+end
 
 rule "Plants are never conform, unless the results are explicitly written here"
 when 
