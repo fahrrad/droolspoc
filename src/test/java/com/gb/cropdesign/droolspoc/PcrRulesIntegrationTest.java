@@ -9,7 +9,6 @@ import javax.sql.DataSource;
 
 import org.drools.KnowledgeBase;
 import org.drools.runtime.StatefulKnowledgeSession;
-import org.hamcrest.core.Is;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -96,7 +95,7 @@ public class PcrRulesIntegrationTest {
 		long end = System.currentTimeMillis();
 		
 		logger.info("All pcr results executed in " + String.valueOf(end-start) + "ms! ");
-		assertTrue((end - start) < 100 );
+		assertTrue((end - start) < 500);
 		
 		
 		int indexOfConfromPlant = plantsList.indexOf(new Plant("12OS0.001.593.905-003", ""));
