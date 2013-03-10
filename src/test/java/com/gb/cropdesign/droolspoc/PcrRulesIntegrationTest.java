@@ -2,15 +2,16 @@ package com.gb.cropdesign.droolspoc;
 
 import static org.junit.Assert.*;
 
+
 import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.drools.KnowledgeBase;
 import org.drools.runtime.StatefulKnowledgeSession;
+import org.hamcrest.core.Is;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -76,6 +77,7 @@ public class PcrRulesIntegrationTest {
 		
 	}
 	
+		
 	
 	@Test
 	public void testAddingPlantsToContext(){
@@ -89,7 +91,13 @@ public class PcrRulesIntegrationTest {
 			ksession.insert(pcrResult);
 		}
 		
-		ksession.fireAllRules();
+		long start = System.currentTimeMillis();
+		ksession.fireAllRules();		
+		long end = System.currentTimeMillis();
+		
+		logger.info("All pcr results executed in " + String.valueOf(end-start) + "ms! ");
+		assertTrue((end - start) < 100 );
+		
 		
 		int indexOfConfromPlant = plantsList.indexOf(new Plant("12OS0.001.593.905-003", ""));
 		assertTrue(plantsList.get(indexOfConfromPlant).getConform());

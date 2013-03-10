@@ -3,7 +3,6 @@ package com.gb.cropdesign.droolspoc;
 
 //list any import classes here.
 
-
 //declare any global variables here
 
 rule "Conform for RPD 57, correct positive"
@@ -19,7 +18,6 @@ when
 	$tzein : PcrResult( testGenePresent == true
 					, pcrTarget ==  PcrTarget.PROM_CDS___PRO0170_CDS0045
 					, plant==$p)
-	
 then
 	modify ( $p ) { setConform( true )  } ;
 end
@@ -68,8 +66,6 @@ then
 end
 
 
-
-
 rule "Conform for RPD 51, all negative"
 when
 	$p : Plant(rpd == "RPD51", conform==null)
@@ -111,16 +107,6 @@ when
 then
 	retract( $pcrr );
 end
-
-/**
-rule "Can this plant be sent to the China filed?"
-when
-	$p: Plant( conform == true )
-	$p2f : PlantsToField( fieldName == "china" )
-then
-	modify ( $p2f ) { getPlantList().add($p) }
-end
-*/ 
 
 
 rule "Can this plant be sent to the france field?"
