@@ -20,6 +20,9 @@
 
 	<!-- scan the service packages -->
 	<context:component-scan base-package="com.gb" />
+	
+	<bean id="plantService" class="com.gb.cropdesign.droolspoc.service.PlantServiceJdbcImpl"/>
+	<bean id="pcrResultService" class="com.gb.cropdesign.droolspoc.service.PcrResultServiceJdbcImpl"/>
 
 	<drools:kbase id="kbase">
 		<drools:resources>

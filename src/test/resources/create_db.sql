@@ -11,7 +11,7 @@ CREATE TABLE plant (id int primary key auto_increment
 CREATE TABLE pcrresult (id int primary key auto_increment
 , plant_name varchar(255)
 , pcr_target varchar(63) 
-, is_test_gene_present bit
+, is_test_gene_present bit NOT NULL
 , copy_nr float
 , is_used bit default 1
 

@@ -5,3 +5,5 @@ target/*
 .settings
 .settings/
 *.nc.*
+exclude_from_commit
+exclude_from_commit/*
