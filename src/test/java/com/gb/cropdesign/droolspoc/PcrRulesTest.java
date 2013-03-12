@@ -67,7 +67,7 @@ public class PcrRulesTest {
 		Plant plant = new Plant("some test plant", "rpd324");
 
 		PcrResult result = new PcrResult(plant, PcrTarget.TZEIN, true);
-		result.setCopyNr(1.8f);
+		result.setCopyNr(2.4f);
 
 		ksession.insert(plant);
 		ksession.insert(result);
@@ -93,6 +93,7 @@ public class PcrRulesTest {
 		ksession.insert(r1);
 
 		ksession.fireAllRules();
+		
 		assertNotNull(p1.getTransgene());
 		assertTrue(p1.getTransgene());
 	}
@@ -143,6 +144,8 @@ public class PcrRulesTest {
 		assertFalse(r1.isUsed());
 
 		ksession.insert(r1);
+		
+		assertTrue(ksession.getObjects().contains(r1));
 		ksession.fireAllRules();
 
 		assertFalse(ksession.getObjects().contains(r1));
@@ -220,9 +223,11 @@ public class PcrRulesTest {
 		assertTrue(ksession.getObjects().isEmpty());
 		Plant p1 = new Plant("e022.0221.00.1.5", "rpd57");
 
-		PcrResult r1 = new PcrResult(p1, PcrTarget.PROM, false);
-		PcrResult r2 = new PcrResult(p1, PcrTarget.TERM, true);
-		PcrResult r3 = new PcrResult(p1, PcrTarget.TZEIN, false);
+		PcrResult r1 = new PcrResult(p1, PcrTarget.PROM_CDS___PRO0129_CDS4107,
+				false);
+		PcrResult r2 = new PcrResult(p1, PcrTarget.TERMINATOR, true);
+		PcrResult r3 = new PcrResult(p1, PcrTarget.PROM_CDS___PRO0170_CDS0045,
+				false);
 
 		ksession.insert(r1);
 		ksession.insert(r2);

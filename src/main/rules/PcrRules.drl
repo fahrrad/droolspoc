@@ -1,3 +1,91 @@
 //created on: 12-mrt-2013
 package com.gb.cropdesign.droolspoc
 
+
+rule "Homozygous"
+no-loop true
+when
+	// pattern ( rege exp , SQL clause ) iso java 
+	$plant : Plant( )
+	PcrResult( pcrTarget == PcrTarget.TZEIN , copyNr > 0.0 && copyNr < 1.8
+				, plant== $plant  ) 
+then
+	modify ( $plant ) { setZygocity(Zygocity.HOMOZYGOUS) };
+	System.out.println("h");
+end
+
+rule "Heterozygous"
+when
+	// pattern ( rege exp , SQL clause ) iso java 
+	// 
+	$plant : Plant( zygocity == null )
+	PcrResult( pcrTarget == PcrTarget.TZEIN , copyNr >= 1.8f && copyNr <= 3.0f
+				, plant== $plant  ) 
+then
+	modify ( $plant ) { setZygocity(Zygocity.HETEROZYGOUS) };
+end
+
+rule "Transgene with one pos result"
+when
+	$plant : Plant( transgene == null )
+	$result : PcrResult( plant == $plant, testGenePresent == true)
+then
+	modify ( $plant ) { setTransgene(true) };
+end
+
+rule "NOT Transgene with no pos result"
+when
+	$plant : Plant( transgene == null )
+	not $result : PcrResult( plant == $plant, testGenePresent == true)
+then
+	modify( $plant ) { setTransgene(false) };
+end
+
+
+rule "forget about used==false results"
+when
+	$pcrresult : PcrResult( used == false )
+then
+	retract ( $pcrresult )
+end
+
+
+rule "Conform positive rpd57 plants"
+when
+	$p : Plant ( rpd == "rpd57", conform == null )
+	$r1 : PcrResult ( plant == $p, testGenePresent == true
+					, pcrTarget ==  PcrTarget.PROM_CDS___PRO0129_CDS4107)
+	$r2 : PcrResult ( plant == $p, testGenePresent == true
+					, pcrTarget ==  PcrTarget.PROM_CDS___PRO0170_CDS0045)
+	$r3 : PcrResult ( plant == $p, testGenePresent == true
+					, pcrTarget ==  PcrTarget.TERMINATOR)
+then
+	modify ( $p ) { setConform(true) } ;
+end
+
+
+rule "Conform negative rpd57 plants"
+when
+	$p : Plant ( rpd == "rpd57", conform == null )
+	$r1 : PcrResult ( plant == $p, testGenePresent == false
+					, pcrTarget ==  PcrTarget.PROM_CDS___PRO0129_CDS4107)
+	$r2 : PcrResult ( plant == $p, testGenePresent == false
+					, pcrTarget ==  PcrTarget.PROM_CDS___PRO0170_CDS0045)
+	$r3 : PcrResult ( plant == $p, testGenePresent == false
+					, pcrTarget ==  PcrTarget.TERMINATOR)
+then
+	modify ( $p ) { setConform(true) } ;
+end
+
+
+rule "Non Transgene, conform plants for FieldTrail France"
+when
+	$p : Plant ( conform == true, transgene == false )
+	$p2f : PlantsToField( fieldName=="france", plantList not contains $p )
+then
+	modify ( $p2f ) { getPlantList().add($p) } ;
+end
+
+
+
+

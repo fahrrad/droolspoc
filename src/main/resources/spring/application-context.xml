@@ -1,8 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:lang="http://www.springframework.org/schema/lang"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:drools="http://drools.org/schema/drools-spring"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.1.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
+		http://drools.org/schema/drools-spring http://drools.org/schema/drools-spring.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
+	<drools:kbase id="kbase">
+		<drools:resources>
+			<drools:resource type="DRL" source="classpath:PcrRules.sol.drl" />
+		</drools:resources>
+	</drools:kbase>
+
+	<drools:ksession id="ksession" type="stateful" kbase="kbase" />
+	
 	<import resource="classpath:/spring/persistence-application-context.xml" />
-	<import resource="classpath:/spring/rules-application-context.xml" />
 </beans>
