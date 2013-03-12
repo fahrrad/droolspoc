@@ -1,6 +1,12 @@
 //created on: 12-mrt-2013
 package com.gb.cropdesign.droolspoc
 
+rule "Homozygous"
 
+when
+
+then
+
+end
 
 
