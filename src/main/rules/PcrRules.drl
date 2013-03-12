@@ -136,7 +136,7 @@ then
 	modify ( $p ) { setZygocity ( Zygocity.HETEROZYGOUS ) };
 end
 
-rule "When plantTableModel and corresponding plant are in the session, make sure the model represents the plant"
+rule "When plantTableModel and corresponding plant are in the session, make sure the model represents the plant ( conform )"
 when 
 	$p : Plant( conform != null && conform == true )
 	$p_m : PlantTableModel( $p.name == name, conform == false )
@@ -144,4 +144,11 @@ then
 	modify ( $p_m ) { setConform( true ) };
 end
 
+rule "When plantTableModel and corresponding plant are in the session, make sure the model represents the plant (transgen )"
+when 
+	$p : Plant( transgene != null && transgene == true )
+	$p_m : PlantTableModel( $p.name == name, transgene == false )
+then 
+	modify ( $p_m ) { setTransgene( true ) };
+end
 

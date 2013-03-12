@@ -107,7 +107,7 @@ public class MainWindowController implements Initializable {
 		pcrTargetColumn.setCellValueFactory(new PropertyValueFactory<PlantResult, String>("pcrTarget"));
 
 		TableColumn<PlantResult, Boolean> isTestGenePresentColumn = new TableColumn<PlantResult, Boolean>("Result");
-		isTestGenePresentColumn.setMinWidth(40);
+		isTestGenePresentColumn.setMinWidth(80);
 		isTestGenePresentColumn.setCellValueFactory(new PropertyValueFactory<PlantResult, Boolean>("result"));
 
 		pcr_results_table.getColumns().addAll(plantNameColumn, pcrTargetColumn, isTestGenePresentColumn);
