@@ -19,7 +19,7 @@
 	<context:annotation-config />
 
 	<!-- scan the service packages -->
-	<context:component-scan base-package="com.gb" />
+	<context:component-scan base-package="com.gb.cropdesign.droolspoc" />
 
 	<drools:kbase id="kbase">
 		<drools:resources>
