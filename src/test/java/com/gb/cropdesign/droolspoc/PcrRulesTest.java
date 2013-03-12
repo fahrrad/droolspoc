@@ -46,7 +46,7 @@ public class PcrRulesTest {
 	public void testHomozygousPlant() {
 		logger.debug(">> testHomozygousPlant");
 
-		Plant plant = new Plant("some test plant", "rpd324");
+		Plant plant = new Plant("some test plant", "rpd57");
 
 		PcrResult result = new PcrResult(plant, PcrTarget.TZEIN, true);
 		result.setCopyNr(0.8f);
@@ -87,7 +87,9 @@ public class PcrRulesTest {
 		logger.debug(">> testTransgene");
 
 		Plant p1 = new Plant("some transgene plant", "RPD49");
-
+		
+		assertNull(p1.getTransgene());
+		
 		PcrResult r1 = new PcrResult(p1, PcrTarget.PROM, true);
 		ksession.insert(p1);
 		ksession.insert(r1);
@@ -141,7 +143,6 @@ public class PcrRulesTest {
 		ksession.insert(p1);
 
 		r1.setUsed(false);
-		assertFalse(r1.isUsed());
 
 		ksession.insert(r1);
 		
@@ -156,6 +157,7 @@ public class PcrRulesTest {
 	 * When a plant, belonging to rpd57 has 3 POSITIVE tests for targets
 	 * PROM_CDS___PRO0129_CDS4107, PROM_CDS___PRO0170_CDS0045 and TERMINATOR the
 	 * plant is considered conform.
+	 * 
 	 */
 	@Test
 	public void testConformPositivePlant() {
