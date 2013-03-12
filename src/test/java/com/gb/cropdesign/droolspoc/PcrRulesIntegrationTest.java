@@ -13,6 +13,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mvel2.ast.Contains;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,18 +66,9 @@ public class PcrRulesIntegrationTest {
 		List<PcrResult> pcrResults = pcrResultService.getPcrResultForPlantName("12OS0.001.593.905-003");
 		assertEquals(8, pcrResults.size());
 		
-		ksession.insert(plant);
-		for(Object fact: pcrResults){
-			ksession.insert(fact);
+		for(PcrResult pcrResult : pcrResults){
+			assertEquals(plant, pcrResult.getPlant());
 		}
-		
-		ksession.fireAllRules();
-		
-		assertNotNull(plant.getConform());
-		assertTrue(plant.getConform());
-		assertNotNull(plant.getTransgene());
-		assertTrue(plant.getTransgene());
-		
 	}
 	
 		
@@ -99,14 +91,6 @@ public class PcrRulesIntegrationTest {
 		
 		logger.info("All pcr results executed in " + String.valueOf(end-start) + "ms! ");
 		assertTrue((end - start) < 500);
-		
-		
-		int indexOfConfromPlant = plantsList.indexOf(new Plant("12OS0.001.593.905-003", ""));
-		
-		assertNotNull(plantsList.get(indexOfConfromPlant).getConform());
-		assertTrue(plantsList.get(indexOfConfromPlant).getConform());
-		assertNotNull(plantsList.get(indexOfConfromPlant).getTransgene());
-		assertTrue(plantsList.get(indexOfConfromPlant).getTransgene());
 		
 	}
 	
