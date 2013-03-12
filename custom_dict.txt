@@ -6,3 +6,5 @@ chromosomes
 wikipedia
 heterozygous
 diploid
+transgenity
+zygocity

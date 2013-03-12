@@ -7,3 +7,4 @@ target/*
 *.nc.*
 exclude_from_commit
 exclude_from_commit/*
+lib/jfxrt.jar

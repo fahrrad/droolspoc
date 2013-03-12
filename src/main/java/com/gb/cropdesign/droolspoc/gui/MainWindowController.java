@@ -33,11 +33,11 @@ public class MainWindowController implements Initializable {
 	PlantResultServiceI plantResultService;
 
 	PlantServiceI plantModelService;
-	
+
 	PcrResultServiceI pcrResultService;
-	
+
 	PlantServiceI plantService;
-	
+
 	KnowledgeBase kbase;
 
 	@FXML
@@ -45,20 +45,19 @@ public class MainWindowController implements Initializable {
 
 	@FXML
 	private TableView<PlantResult> pcr_results_table;
-	
+
 	@FXML
 	private Button calculate_button;
-	
-	private ObservableList<PlantResult> plantResultItems;
-	
-	private ObservableList<PlantTableModel> plantItems;
 
+	private ObservableList<PlantResult> plantResultItems;
+
+	private ObservableList<PlantTableModel> plantItems;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
-		ApplicationContext context =
-				new ClassPathXmlApplicationContext("classpath:/spring/rules-application-context.xml");
+		ApplicationContext context = new ClassPathXmlApplicationContext(
+				"classpath:/spring/application-context.xml");
 
 		plantResultService = context.getBean(PlantResultServiceI.class);
 		plantModelService = context.getBean(PlantServiceI.class);
@@ -68,72 +67,94 @@ public class MainWindowController implements Initializable {
 
 		assert plants_table != null;
 		assert pcr_results_table != null;
-		
+
 		initialisePcrResultTable();
 		initialisePlantTable();
-		
+
 		calculate_button.setOnAction(new EventHandler<ActionEvent>() {
-			
+
 			@Override
 			public void handle(ActionEvent event) {
-				StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
-				
-				for(PlantTableModel plant : plantItems){
+				StatefulKnowledgeSession ksession = kbase
+						.newStatefulKnowledgeSession();
+
+				for (PlantTableModel plant : plantItems) {
 					ksession.insert(plant);
 				}
-				
-				for(Plant plant : plantModelService.getAllPlants()){
+
+				for (Plant plant : plantModelService.getAllPlants()) {
 					ksession.insert(plant);
 				}
-				
-				for(PcrResult pcrResult : pcrResultService.getAllPcrResults()){
+
+				for (PcrResult pcrResult : pcrResultService.getAllPcrResults()) {
 					ksession.insert(pcrResult);
 				}
-				
-				ksession.fireAllRules();				
+
+				ksession.fireAllRules();
 			}
 		});
 
 	}
 
-
 	private void initialisePcrResultTable() {
-		TableColumn<PlantResult, String> plantNameColumn = new TableColumn<PlantResult, String>("Plant Name");
+		TableColumn<PlantResult, String> plantNameColumn = new TableColumn<PlantResult, String>(
+				"Plant Name");
 		plantNameColumn.setMinWidth(100);
-		plantNameColumn.setCellValueFactory(new PropertyValueFactory<PlantResult, String>("plantName"));
+		plantNameColumn
+				.setCellValueFactory(new PropertyValueFactory<PlantResult, String>(
+						"plantName"));
 
-		TableColumn<PlantResult, String> pcrTargetColumn = new TableColumn<PlantResult, String>("Pcr Target");
+		TableColumn<PlantResult, String> pcrTargetColumn = new TableColumn<PlantResult, String>(
+				"Pcr Target");
 		pcrTargetColumn.setMinWidth(100);
-		pcrTargetColumn.setCellValueFactory(new PropertyValueFactory<PlantResult, String>("pcrTarget"));
+		pcrTargetColumn
+				.setCellValueFactory(new PropertyValueFactory<PlantResult, String>(
+						"pcrTarget"));
 
-		TableColumn<PlantResult, Boolean> isTestGenePresentColumn = new TableColumn<PlantResult, Boolean>("Result");
+		TableColumn<PlantResult, Boolean> isTestGenePresentColumn = new TableColumn<PlantResult, Boolean>(
+				"Result");
 		isTestGenePresentColumn.setMinWidth(80);
-		isTestGenePresentColumn.setCellValueFactory(new PropertyValueFactory<PlantResult, Boolean>("result"));
+		isTestGenePresentColumn
+				.setCellValueFactory(new PropertyValueFactory<PlantResult, Boolean>(
+						"result"));
 
-		pcr_results_table.getColumns().addAll(plantNameColumn, pcrTargetColumn, isTestGenePresentColumn);
+		pcr_results_table.getColumns().addAll(plantNameColumn, pcrTargetColumn,
+				isTestGenePresentColumn);
 		plantResultItems = plantResultService.getPlantResults();
 		pcr_results_table.setItems(plantResultItems);
 	}
 
-
 	private void initialisePlantTable() {
-		TableColumn<PlantTableModel, String> plantNameColumn = new TableColumn<PlantTableModel, String>("Plant Name");
+		TableColumn<PlantTableModel, String> plantNameColumn = new TableColumn<PlantTableModel, String>(
+				"Plant Name");
 		plantNameColumn.setMinWidth(100);
-		plantNameColumn.setCellValueFactory(new PropertyValueFactory<PlantTableModel, String>("name"));
-		
-		TableColumn<PlantTableModel, String> rpdColumn = new TableColumn<PlantTableModel, String>("RPD");
+		plantNameColumn
+				.setCellValueFactory(new PropertyValueFactory<PlantTableModel, String>(
+						"name"));
+
+		TableColumn<PlantTableModel, String> rpdColumn = new TableColumn<PlantTableModel, String>(
+				"RPD");
 		rpdColumn.setMinWidth(100);
-		rpdColumn.setCellValueFactory(new PropertyValueFactory<PlantTableModel, String>("rpd"));
+		rpdColumn
+				.setCellValueFactory(new PropertyValueFactory<PlantTableModel, String>(
+						"rpd"));
 
-		TableColumn<PlantTableModel, Boolean> transgeneColumn = new TableColumn<PlantTableModel, Boolean>("Transgene");
+		TableColumn<PlantTableModel, Boolean> transgeneColumn = new TableColumn<PlantTableModel, Boolean>(
+				"Transgene");
 		transgeneColumn.setMinWidth(100);
-		transgeneColumn.setCellValueFactory(new PropertyValueFactory<PlantTableModel, Boolean>("transgene"));
+		transgeneColumn
+				.setCellValueFactory(new PropertyValueFactory<PlantTableModel, Boolean>(
+						"transgene"));
 
-		TableColumn<PlantTableModel, Boolean> conformColumn = new TableColumn<PlantTableModel, Boolean>("Conform");
+		TableColumn<PlantTableModel, Boolean> conformColumn = new TableColumn<PlantTableModel, Boolean>(
+				"Conform");
 		conformColumn.setMinWidth(100);
-		conformColumn.setCellValueFactory(new PropertyValueFactory<PlantTableModel, Boolean>("conform"));
+		conformColumn
+				.setCellValueFactory(new PropertyValueFactory<PlantTableModel, Boolean>(
+						"conform"));
 
-		plants_table.getColumns().addAll(plantNameColumn, transgeneColumn, conformColumn, rpdColumn);
+		plants_table.getColumns().addAll(plantNameColumn, transgeneColumn,
+				conformColumn, rpdColumn);
 		plantItems = plantModelService.getAllPlantTableModels();
 		plants_table.setItems(plantItems);
 

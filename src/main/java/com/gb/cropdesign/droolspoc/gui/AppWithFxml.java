@@ -16,6 +16,7 @@ public class AppWithFxml extends Application {
 		try {
 			AnchorPane page = (AnchorPane) FXMLLoader.load(getClass().getResource("main.fxml"));
 			Scene scene = new Scene(page);
+			scene.getStylesheets().add(getClass().getResource("TableLayout.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("Pcr Result Drools POC");
 			primaryStage.show();

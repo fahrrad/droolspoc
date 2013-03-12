@@ -23,7 +23,8 @@ import com.gb.cropdesign.droolspoc.service.PcrResultServiceI;
 import com.gb.cropdesign.droolspoc.service.PlantServiceI;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/spring/rules-application-context.xml" })
+@ContextConfiguration(locations = { "classpath:/spring/rules-application-context.xml" 
+		, "classpath:/spring/persistence-application-context.xml"})
 public class PcrRulesIntegrationTest {
 	
 	@Autowired
@@ -71,7 +72,9 @@ public class PcrRulesIntegrationTest {
 		
 		ksession.fireAllRules();
 		
+		assertNotNull(plant.getConform());
 		assertTrue(plant.getConform());
+		assertNotNull(plant.getTransgene());
 		assertTrue(plant.getTransgene());
 		
 	}
@@ -99,7 +102,10 @@ public class PcrRulesIntegrationTest {
 		
 		
 		int indexOfConfromPlant = plantsList.indexOf(new Plant("12OS0.001.593.905-003", ""));
+		
+		assertNotNull(plantsList.get(indexOfConfromPlant).getConform());
 		assertTrue(plantsList.get(indexOfConfromPlant).getConform());
+		assertNotNull(plantsList.get(indexOfConfromPlant).getTransgene());
 		assertTrue(plantsList.get(indexOfConfromPlant).getTransgene());
 		
 	}
