@@ -1,134 +1,91 @@
-//created on: 5-mrt-2013
-package com.gb.cropdesign.droolspoc;
+//created on: 12-mrt-2013
+package com.gb.cropdesign.droolspoc
 
-//list any import classes here.
 
-//declare any global variables here
-
-rule "Conform for RPD 57, correct positive"
+rule "Homozygous"
+no-loop true
 when
-	$p : Plant(rpd == "rpd57", conform==null)
-	// Todo allow for nulls in testGene
-	$term : PcrResult( testGenePresent ==  true
-					, pcrTarget == PcrTarget.TERMINATOR
-					, plant==$p )
-	$prom: PcrResult( testGenePresent ==  true
-					, pcrTarget == PcrTarget.PROM_CDS___PRO0129_CDS4107
-					, plant==$p )
-	$tzein : PcrResult( testGenePresent == true
-					, pcrTarget ==  PcrTarget.PROM_CDS___PRO0170_CDS0045
-					, plant==$p)
+	// pattern ( rege exp , SQL clause ) iso java 
+	$plant : Plant( )
+	PcrResult( pcrTarget == PcrTarget.TZEIN , copyNr > 0.0 && copyNr < 1.8
+				, plant== $plant  ) 
 then
-	modify ( $p ) { setConform( true )  } ;
+	modify ( $plant ) { setZygocity(Zygocity.HOMOZYGOUS) };
+	System.out.println("h");
 end
 
-rule "Conform for RPD 57, correct negative"
+rule "Heterozygous"
 when
-	$p : Plant(rpd == "rpd57", conform==null)
-	// Todo allow for nulls in testGene
-	$term : PcrResult( testGenePresent ==  false
-					, pcrTarget == PcrTarget.TERMINATOR
-					, plant==$p )
-	$prom: PcrResult( testGenePresent ==  false
-					, pcrTarget == PcrTarget.PROM_CDS___PRO0129_CDS4107
-					, plant==$p )
-	$tzein : PcrResult( testGenePresent == false
-					, pcrTarget ==  PcrTarget.PROM_CDS___PRO0170_CDS0045
-					, plant==$p)
-	
+	// pattern ( rege exp , SQL clause ) iso java 
+	// 
+	$plant : Plant( zygocity == null )
+	PcrResult( pcrTarget == PcrTarget.TZEIN , copyNr >= 1.8f && copyNr <= 3.0f
+				, plant== $plant  ) 
 then
-	modify ( $p ) { setConform( true )  } ;
+	modify ( $plant ) { setZygocity(Zygocity.HETEROZYGOUS) };
 end
 
-
-rule "Conform for RPD 51, correct positive"
+rule "Transgene with one pos result"
 when
-	$p : Plant(rpd == "RPD51", conform==null)
-	// Todo allow for nulls in testGene
-	$term : PcrResult( testGenePresent ==  true
-					, pcrTarget == PcrTarget.TERM
-					, plant==$p )
-	$prom: PcrResult( testGenePresent ==  true
-					, pcrTarget == PcrTarget.PROM
-					, plant==$p )
-	$tzein : PcrResult( testGenePresent == true
-					, pcrTarget ==  PcrTarget.TZEIN
-					, plant==$p)
-	
+	$plant : Plant( transgene == null )
+	$result : PcrResult( plant == $plant, testGenePresent == true)
 then
-	modify ( $p ) { setConform( true )  } ;
+	modify ( $plant ) { setTransgene(true) };
+end
+
+rule "NOT Transgene with no pos result"
+when
+	$plant : Plant( transgene == null )
+	not $result : PcrResult( plant == $plant, testGenePresent == true)
+then
+	modify( $plant ) { setTransgene(false) };
 end
 
 
-rule "Conform for RPD 51, all negative"
+rule "forget about used==false results"
 when
-	$p : Plant(rpd == "RPD51", conform==null)
-	// Todo allow for nulls in testGene
-	$term : PcrResult( testGenePresent ==  false
-					, pcrTarget == PcrTarget.TERM
-					, plant==$p )
-	$prom: PcrResult( testGenePresent ==  false
-					, pcrTarget == PcrTarget.PROM
-					, plant==$p )
-	$tzein : PcrResult( testGenePresent == false
-					, pcrTarget ==  PcrTarget.TZEIN
-					, plant==$p)
+	$pcrresult : PcrResult( used == false )
+then
+	retract ( $pcrresult )
+end
+
+
+rule "Conform positive rpd57 plants"
+when
+	$p : Plant ( rpd == "rpd57", conform == null )
+	$r1 : PcrResult ( plant == $p, testGenePresent == true
+					, pcrTarget ==  PcrTarget.PROM_CDS___PRO0129_CDS4107)
+	$r2 : PcrResult ( plant == $p, testGenePresent == true
+					, pcrTarget ==  PcrTarget.PROM_CDS___PRO0170_CDS0045)
+	$r3 : PcrResult ( plant == $p, testGenePresent == true
+					, pcrTarget ==  PcrTarget.TERMINATOR)
 then
 	modify ( $p ) { setConform(true) } ;
 end
 
 
-rule "Transgene when one of the tests is positive"
+rule "Conform negative rpd57 plants"
 when
-	$p : Plant( transgene == null)
-	$pcrr : PcrResult( testGenePresent == true, plant == $p)
-then 
-	modify ( $p ) { setTransgene(true) };
+	$p : Plant ( rpd == "rpd57", conform == null )
+	$r1 : PcrResult ( plant == $p, testGenePresent == false
+					, pcrTarget ==  PcrTarget.PROM_CDS___PRO0129_CDS4107)
+	$r2 : PcrResult ( plant == $p, testGenePresent == false
+					, pcrTarget ==  PcrTarget.PROM_CDS___PRO0170_CDS0045)
+	$r3 : PcrResult ( plant == $p, testGenePresent == false
+					, pcrTarget ==  PcrTarget.TERMINATOR)
+then
+	modify ( $p ) { setConform(true) } ;
 end
 
-rule "Not Transgene when none of the tests is positive"
+
+rule "Non Transgene, conform plants for FieldTrail France"
 when
-	$p : Plant( transgene == null )
-	not PcrResult( testGenePresent == true, plant == $p)
-then 
-	modify ( $p ) { setTransgene(false) };
+	$p : Plant ( conform == true, transgene == false )
+	$p2f : PlantsToField( fieldName=="france", plantList not contains $p )
+then
+	modify ( $p2f ) { getPlantList().add($p) } ;
 end
 
-
-rule "Remove Pcr Results that should not be used"
-when 
-	$pcrr : PcrResult( used == false )
-then
-	retract( $pcrr );
-end
-
-
-rule "Can this plant be sent to the france field?"
-when
-	$p: Plant( transgene == false, conform == true)
-	$p2f : PlantsToField( plantList not contains $p )
-then
-	modify ( $p2f ) { getPlantList().add($p) }
-end 
-
-rule "Copy Nr > 0 and < 1.3 => homozygous"
-when 
-	$p : Plant( zygocity == null )
-	$r : PcrResult(plant == $p
-					, copyNr > 0 && copyNr <= 1.3 )
-then
-	modify ( $p ) { setZygocity ( Zygocity.HOMOZYGOUS ) };
-end
-
-
-rule "Copy Nr > 1.3 and <= 2.5 => heterozygous"
-when 
-	$p : Plant( zygocity == null  )
-	$r : PcrResult(plant == $p
-					, copyNr > 1.3 && copyNr <= 2.5 )
-then
-	modify ( $p ) { setZygocity ( Zygocity.HETEROZYGOUS ) };
-end
 
 rule "When plantTableModel and corresponding plant are in the session, make sure the model represents the plant ( conform )"
 when 
@@ -145,4 +102,7 @@ when
 then 
 	modify ( $p_m ) { setTransgene( true ) };
 end
+
+
+
 
