@@ -2,12 +2,17 @@ package com.gb.cropdesign.droolspoc.service;
 
 import java.util.List;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.gb.cropdesign.droolspoc.Plant;
+import com.gb.cropdesign.droolspoc.PlantTableModel;
 import com.gb.cropdesign.droolspoc.mapper.PlantMapper;
+import com.gb.cropdesign.droolspoc.mapper.PlantTableModelMapper;
 
 @Service
 public class PlantServiceJdbcImpl implements PlantServiceI {
@@ -27,4 +32,8 @@ public class PlantServiceJdbcImpl implements PlantServiceI {
 		return  jdbcTemplate.queryForObject(sql, new PlantMapper(), plantName);
 	}
 
+	@Override
+	public ObservableList<PlantTableModel> getAllPlantTableModels() {
+		return FXCollections.observableList(jdbcTemplate.query("SELECT name, rpd_nr, conform, transgene from Plant", new PlantTableModelMapper()));
+	}
 }
