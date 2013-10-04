@@ -5,10 +5,10 @@ package com.gb.cropdesign.droolspoc
 rule "Homozygous"
 no-loop true
 when
-	// pattern ( rege exp , SQL clause ) iso java 
+	// pattern ( rege exp , SQL clause ) iso java
 	$plant : Plant( )
 	PcrResult( pcrTarget == PcrTarget.TZEIN , copyNr > 0.0 && copyNr < 1.8
-				, plant== $plant  ) 
+				, plant== $plant  )
 then
 	modify ( $plant ) { setZygocity(Zygocity.HOMOZYGOUS) };
 	System.out.println("h");
@@ -16,11 +16,11 @@ end
 
 rule "Heterozygous"
 when
-	// pattern ( rege exp , SQL clause ) iso java 
-	// 
+	// pattern ( rege exp , SQL clause ) iso java
+	//
 	$plant : Plant( zygocity == null )
 	PcrResult( pcrTarget == PcrTarget.TZEIN , copyNr >= 1.8f && copyNr <= 3.0f
-				, plant== $plant  ) 
+				, plant== $plant  )
 then
 	modify ( $plant ) { setZygocity(Zygocity.HETEROZYGOUS) };
 end
@@ -64,6 +64,8 @@ then
 end
 
 
+
+
 rule "Conform negative rpd57 plants"
 when
 	$p : Plant ( rpd == "rpd57", conform == null )
@@ -88,21 +90,17 @@ end
 
 
 rule "When plantTableModel and corresponding plant are in the session, make sure the model represents the plant ( conform )"
-when 
+when
 	$p : Plant( conform != null && conform == true )
 	$p_m : PlantTableModel( $p.name == name, conform == false )
-then 
+then
 	modify ( $p_m ) { setConform( true ) };
 end
 
 rule "When plantTableModel and corresponding plant are in the session, make sure the model represents the plant (transgen )"
-when 
+when
 	$p : Plant( transgene != null && transgene == true )
 	$p_m : PlantTableModel( $p.name == name, transgene == false )
-then 
+then
 	modify ( $p_m ) { setTransgene( true ) };
 end
-
-
-
-

@@ -1,0 +1,19 @@
+.table-cell {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+
+/* Style for positive */
+.positiveResultStyle {
+    -fx-background-color : green;
+}
+
+/* Style for negative test result */
+.negativeResultStyle {
+    -fx-background-color : red;
+}
+
+/* Style for unknown */
+.unknownResultStyle {
+    -fx-background-color : yellow;
+}
